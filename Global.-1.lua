@@ -1,5 +1,5 @@
 
-UPDATE_VERSION = 5.5
+UPDATE_VERSION = 5.5a
 --[[
 
 5.5:
@@ -3118,7 +3118,15 @@ function markDead(tableIn)
 		if victimColor and victimColor ~= bulletInfo.shooterColor then
 
 			timeOfPlay = math.floor(os.time()-timeSinceUV)
-			broadcastToAll("Time to Shoot: " .. timeOfPlay .. " Seconds")
+			timeOfPlayMin = math.floor(timeOfPlay / 60)
+			timeOfPlaySec = timeOfPlay - (timeOfPlayMin * 60)
+
+			if timeOfPlay < 60 then
+				broadcastToAll("Time to Shoot: " .. timeOfPlay .. " Seconds")
+			else
+				broadcastToAll("Time to Shoot: " .. timeOfPlayMin .. " Minutes " .. timeOfPlaySec .. " Seconds")
+			end
+
 			timeSinceUV = os.time()
 			getObjectFromGUID("303db7").Clock.startStopwatch()
 			getObjectFromGUID("68faa0").Clock.startStopwatch()
@@ -3784,7 +3792,8 @@ end
 function getFinalVoteString()
 
   timeOfPlay = math.floor(os.time()-timeSinceUV)
-
+  timeOfPlayMin = math.floor(timeOfPlay / 60)
+  timeOfPlaySec = timeOfPlay - (timeOfPlayMin * 60)
 
 	local jaCount = 0
 	local neinCount = 0
@@ -3809,16 +3818,32 @@ function getFinalVoteString()
 	out = out .. '[/i]'
 	if jaCount > neinCount then
 		if bolRichard then
-			broadcastToAll('Vote passes via Handsome Richard Rule (' .. timeOfPlay .. " Seconds)", stringColorToRGB('Green'))
+			if timeOfPlay < 60 then
+				broadcastToAll('Vote passes via Handsome Richard Rule (' .. timeOfPlay .. " Seconds)", stringColorToRGB('Green'))
+			else
+				broadcastToAll('Vote passes via Handsome Richard Rule (' .. timeOfPlayMin .. "Minutes " .. timeOfPlaySec .. " Seconds)", stringColorToRGB('Green'))
+			end
 		else
-			broadcastToAll('Vote passes (' .. timeOfPlay .. " Seconds)", stringColorToRGB('Green'))
+			if timeOfPlay < 60 then
+				broadcastToAll('Vote passes (' .. timeOfPlay .. " Seconds)", stringColorToRGB('Green'))
+			else
+				broadcastToAll('Vote passes (' .. timeOfPlayMin .. "Minutes " .. timeOfPlaySec .. " Seconds)", stringColorToRGB('Green'))
+			end
 		end		
 		out = '[' .. stringColorToHex('Green') .. ']-<<<<· Vote passes <══¦-•\n' .. '[-]' .. out
 	else
 		if bolRichard then
-			broadcastToAll('Vote fails via Handsome Richard Rule (' .. timeOfPlay .. " Seconds)", stringColorToRGB('Red'))
+			if timeOfPlay < 60 then
+				broadcastToAll('Vote fails via Handsome Richard Rule (' .. timeOfPlay .. " Seconds)", stringColorToRGB('Red'))
+			else
+				broadcastToAll('Vote fails via Handsome Richard Rule (' .. timeOfPlayMin .. "Minutes " .. timeOfPlaySec .. " Seconds)", stringColorToRGB('Red'))
+			end
 		else
-			broadcastToAll('Vote fails (' .. timeOfPlay .. " Seconds)", stringColorToRGB('Red'))
+			if timeOfPlay < 60 then
+				broadcastToAll('Vote fails (' .. timeOfPlay .. " Seconds)", stringColorToRGB('Red'))
+			else
+				broadcastToAll('Vote fails (' .. timeOfPlayMin .. "Minutes " .. timeOfPlaySec .. " Seconds)", stringColorToRGB('Red'))
+			end
 		end		
 		out = '[' .. stringColorToHex('Red') .. ']-<<<<· Vote fails <══¦-•\n' .. '[-]' .. out
 		if options.autoNotate and recordDownvotes then
@@ -4733,7 +4758,13 @@ function playerInspected(clickedObject, inspectorColor, checkedColor)
 		removeInspect()
 
 		timeOfPlay = math.floor(os.time()-timeSinceUV)
-		broadcastToAll("Time to Inspect: " .. timeOfPlay .. " Seconds")
+		timeOfPlayMin = math.floor(timeOfPlay / 60)
+		timeOfPlaySec = timeOfPlay - (timeOfPlayMin * 60)
+		if timeOfPlay < 60 then
+			broadcastToAll("Time to Inspect: " .. timeOfPlay .. " Seconds")
+		else
+			broadcastToAll("Time to Inspect: " .. timeOfPlayMin .. " Minutes " .. timeOfPlaySec .. " Seconds")
+		end
 		timeSinceUV = os.time()
 		getObjectFromGUID("303db7").Clock.startStopwatch()
 		getObjectFromGUID("68faa0").Clock.startStopwatch()
